@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline MCH SEEG - Expérience Employé</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .seeg-blue { background-color: #1e3a8a; }
+        .seeg-blue-light { background-color: #3b82f6; }
+        .seeg-blue-text { color: #1e3a8a; }
+        .timeline-line { 
+            background: linear-gradient(to bottom, #1e3a8a, #3b82f6, #60a5fa, #3b82f6, #1e3a8a);
+            width: 4px;
+        }
+        .phase-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-left: 4px solid transparent;
+        }
+        .phase-card:hover {
+            transform: translateX(8px);
+            border-left-color: #1e3a8a;
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+        }
+        .module-badge {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        @keyframes pulse-badge {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+        .benefit-item {
+            animation: slideInFromRight 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        .benefit-item:nth-child(1) { animation-delay: 0.1s; }
+        .benefit-item:nth-child(2) { animation-delay: 0.2s; }
+        .benefit-item:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes slideInFromRight {
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .step-item {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .step-item:hover {
+            background-color: #f1f5f9;
+            padding-left: 1rem;
+        }
+        .step-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 100%;
+            background: linear-gradient(to right, #1e3a8a, transparent);
+            transition: width 0.3s ease;
+        }
+        .step-item:hover::before {
+            width: 4px;
+        }
+        .floating-modules {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        @media print {
+            .floating-modules { display: none; }
+            .phase-card { break-inside: avoid; }
+            body { print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <div class="hero-section text-white py-16 relative">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="flex justify-center mb-6">
+                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center">
+                    <i class="fas fa-users text-4xl seeg-blue-text"></i>
+                </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-4">Le Parcours Collaborateur SEEG</h1>
+            <p class="text-xl mb-2">Votre Expérience RH Digitalisée avec le MCH</p>
+            <p class="text-lg opacity-90">De l'attraction des talents à l'accompagnement des départs</p>
+            <div class="mt-8 flex justify-center space-x-8 text-sm">
+                <div class="text-center">
+                    <div class="font-bold text-2xl">5</div>
+                    <div>Phases Clés</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-bold text-2xl">25+</div>
+                    <div>Étapes Détaillées</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-bold text-2xl">9</div>
+                    <div>Modules MCH</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Transversaux Flottants -->
+    <!-- <div class="floating-modules hidden lg:block">
+        <div class="bg-white rounded-lg shadow-lg p-4 mb-4 w-64">
+            <h3 class="font-semibold seeg-blue-text mb-3 text-sm">Modules Transversaux MCH</h3>
+            <div class="space-y-2 text-xs">
+                <div class="module-badge text-white px-2 py-1 rounded-full">
+                    <i class="fas fa-database mr-1"></i> Référentiel RH
+                </div>
+                <div class="module-badge text-white px-2 py-1 rounded-full">
+                    <i class="fas fa-chart-line mr-1"></i> Indicateurs & Pilotage
+                </div>
+                <div class="module-badge text-white px-2 py-1 rounded-full">
+                    <i class="fas fa-shield-alt mr-1"></i> Gestion des Accès
+                </div>
+                <div class="module-badge text-white px-2 py-1 rounded-full">
+                    <i class="fas fa-bell mr-1"></i> Alertes & Notifications
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Timeline Container -->
+    <div class="container mx-auto px-6 py-12">
+        <div class="relative">
+            <!-- Timeline Line -->
+            <div class="timeline-line absolute left-8 top-0 bottom-0 hidden md:block"></div>
+
+            <!-- Phase 1: Sourcing & Acquisition -->
+            <div class="phase-card bg-white rounded-lg shadow-lg p-10 mb-8 ml-0 md:ml-20">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 seeg-blue rounded-full flex items-center justify-center text-white text-2xl mr-4 relative -ml-0 md:-ml-28">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold seeg-blue-text">1. Sourcing & Acquisition des Talents</h2>
+                        <p class="text-gray-600">Attirer et sélectionner les meilleurs candidats</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Étapes Clés</h3>
+                        <div class="space-y-3">
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Définition du Besoin & Stratégie</div>
+                                <div class="text-sm text-gray-600 mt-1">Analyse, élaboration offre, choix canaux</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Recrutement & Sélection</div>
+                                <div class="text-sm text-gray-600 mt-1">Gestion candidatures, entretiens, évaluations</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Pré-Intégration</div>
+                                <div class="text-sm text-gray-600 mt-1">Documents administratifs, préparation logistique</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Modules MCH Impliqués</h3>
+                        <div class="space-y-2 mb-4">
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-user-plus mr-1"></i> Recrutement & Intégration
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-database mr-1"></i> Référentiel RH
+                            </span>
+                        </div>
+                        <h4 class="font-medium mb-3 seeg-blue-text">Bénéfices Clés</h4>
+                        <div class="space-y-2">
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Processus de recrutement standardisé et traçable
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Réduction du time-to-hire
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Amélioration de l'expérience candidat
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2: Intégration & Socialisation -->
+            <div class="phase-card bg-white rounded-lg shadow-lg p-10 mb-8 ml-0 md:ml-20">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 seeg-blue rounded-full flex items-center justify-center text-white text-2xl mr-4 relative -ml-0 md:-ml-28">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold seeg-blue-text">2. Intégration & Socialisation</h2>
+                        <p class="text-gray-600">Accueillir et accompagner les nouveaux collaborateurs</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Étapes Clés</h3>
+                        <div class="space-y-3">
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Accueil & Formalités</div>
+                                <div class="text-sm text-gray-600 mt-1">Jour J, finalisation dossier, outils de travail</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Immersion & Apprentissage</div>
+                                <div class="text-sm text-gray-600 mt-1">Plan d'intégration, formations initiales, mentorat</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Évaluation & Ajustement</div>
+                                <div class="text-sm text-gray-600 mt-1">Suivi, feedback, validation période d'essai</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Modules MCH Impliqués</h3>
+                        <div class="space-y-2 mb-4">
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-user-plus mr-1"></i> Recrutement & Intégration
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-file-alt mr-1"></i> Gestion Administrative
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-graduation-cap mr-1"></i> Formation
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-user mr-1"></i> Profil Carrière
+                            </span>
+                        </div>
+                        <h4 class="font-medium mb-3 seeg-blue-text">Bénéfices Clés</h4>
+                        <div class="space-y-2">
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Intégration structurée et personnalisée
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Réduction du turn-over précoce
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Accélération de la montée en compétence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 3: Engagement & Performance -->
+            <div class="phase-card bg-white rounded-lg shadow-lg p-10 mb-8 ml-0 md:ml-20">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 seeg-blue rounded-full flex items-center justify-center text-white text-2xl mr-4 relative -ml-0 md:-ml-28">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold seeg-blue-text">3. Engagement & Performance Continue</h2>
+                        <p class="text-gray-600">Développer et maintenir la performance au quotidien</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Étapes Clés</h3>
+                        <div class="space-y-3">
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Contribution & Opérations</div>
+                                <div class="text-sm text-gray-600 mt-1">Missions quotidiennes, gestion administrative, paie</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Développement Professionnel</div>
+                                <div class="text-sm text-gray-600 mt-1">Besoins de développement, formations, compétences</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Évaluation & Feedback</div>
+                                <div class="text-sm text-gray-600 mt-1">Entretiens périodiques, objectifs, rémunération</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Engagement & Bien-être</div>
+                                <div class="text-sm text-gray-600 mt-1">Vie d'entreprise, enquêtes satisfaction</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Modules MCH Impliqués</h3>
+                        <div class="space-y-2 mb-4">
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-file-alt mr-1"></i> Gestion Administrative
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-user mr-1"></i> Profil Carrière
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-graduation-cap mr-1"></i> Formation
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-star mr-1"></i> Évaluations
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-users-cog mr-1"></i> GPEC
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-chart-line mr-1"></i> Indicateurs RH
+                            </span>
+                        </div>
+                        <h4 class="font-medium mb-3 seeg-blue-text">Bénéfices Clés</h4>
+                        <div class="space-y-2">
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Self-service RH pour l'autonomie des collaborateurs
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Suivi en temps réel des performances
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Développement continu des compétences
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 4: Évolution de Carrière -->
+            <div class="phase-card bg-white rounded-lg shadow-lg p-10 mb-8 ml-0 md:ml-20">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 seeg-blue rounded-full flex items-center justify-center text-white text-2xl mr-4 relative -ml-0 md:-ml-28">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold seeg-blue-text">4. Évolution de Carrière & Mobilité</h2>
+                        <p class="text-gray-600">Accompagner la croissance et la mobilité interne</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Étapes Clés</h3>
+                        <div class="space-y-3">
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Gestion des Talents</div>
+                                <div class="text-sm text-gray-600 mt-1">Identification potentiels, plans développement</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Mobilité Interne</div>
+                                <div class="text-sm text-gray-600 mt-1">Souhaits d'évolution, opportunités, promotions</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Parcours & Succession</div>
+                                <div class="text-sm text-gray-600 mt-1">Postes clés, successeurs, préparation relèves</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Reconnaissance & Fidélisation</div>
+                                <div class="text-sm text-gray-600 mt-1">Valorisation des talents, rétention</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Modules MCH Impliqués</h3>
+                        <div class="space-y-2 mb-4">
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-star mr-1"></i> Carrières & Talents
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-users-cog mr-1"></i> GPEC
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-graduation-cap mr-1"></i> Formation
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-star mr-1"></i> Évaluations
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-database mr-1"></i> Référentiel RH
+                            </span>
+                        </div>
+                        <h4 class="font-medium mb-3 seeg-blue-text">Bénéfices Clés</h4>
+                        <div class="space-y-2">
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Gestion prévisionnelle des carrières
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Visibilité sur les opportunités internes
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Planification de la succession
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 5: Transition & Départ -->
+            <div class="phase-card bg-white rounded-lg shadow-lg p-10 mb-8 ml-0 md:ml-20">
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 seeg-blue rounded-full flex items-center justify-center text-white text-2xl mr-4 relative -ml-0 md:-ml-28">
+                        <i class="fas fa-door-open"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold seeg-blue-text">5. Transition & Départ</h2>
+                        <p class="text-gray-600">Gérer les départs dans les meilleures conditions</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Étapes Clés</h3>
+                        <div class="space-y-3">
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Gestion de la Décision</div>
+                                <div class="text-sm text-gray-600 mt-1">Notification, planification du départ</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Processus de Départ</div>
+                                <div class="text-sm text-gray-600 mt-1">Entretien de départ, transfert connaissances</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Formalités & Solde</div>
+                                <div class="text-sm text-gray-600 mt-1">STC, documents fin contrat, archivage</div>
+                            </div>
+                            <div class="step-item p-3 rounded">
+                                <div class="font-medium">Post-Départ</div>
+                                <div class="text-sm text-gray-600 mt-1">Réseau Alumni (optionnel)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-lg mb-4 seeg-blue-text">Modules MCH Impliqués</h3>
+                        <div class="space-y-2 mb-4">
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-file-alt mr-1"></i> Gestion Administrative
+                            </span>
+                            <span class="module-badge text-white px-3 py-1 rounded-full text-sm inline-block mr-2 mb-2">
+                                <i class="fas fa-user mr-1"></i> Profil Carrière
+                            </span>
+                        </div>
+                        <h4 class="font-medium mb-3 seeg-blue-text">Bénéfices Clés</h4>
+                        <div class="space-y-2">
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Processus de départ structuré et sécurisé
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Conservation de la connaissance
+                            </div>
+                            <div class="benefit-item flex items-center text-sm">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                Conformité administrative garantie
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer avec synthèse -->
+        <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg p-8 mt-12">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold mb-4">MCH : Votre Partenaire Digital RH</h2>
+                <p class="text-lg mb-6">Une solution complète pour transformer l'expérience collaborateur à la SEEG</p>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="text-3xl font-bold">100%</div>
+                        <div>Cycle de vie couvert</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">9</div>
+                        <div>Modules intégrés</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold">360°</div>
+                        <div>Vision RH globale</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all phase cards
+        document.querySelectorAll('.phase-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Add click interactions for step items
+        document.querySelectorAll('.step-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Toggle selection
+                this.classList.toggle('bg-blue-50');
+                this.classList.toggle('border-l-4');
+                this.classList.toggle('border-blue-500');
+            });
+        });
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
